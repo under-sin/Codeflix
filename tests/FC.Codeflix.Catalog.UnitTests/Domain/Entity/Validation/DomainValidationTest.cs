@@ -46,7 +46,7 @@ public class DomainValidationTest
         Action action = () => DomainValidation.NotNullOrEmpty(target, fieldnName);
         action.Should()
             .Throw<EntityValidationException>()
-            .WithMessage($"{fieldnName} should not be null or empty");
+            .WithMessage($"{fieldnName} should not be empty or null");
     }
     
     [Fact(DisplayName = nameof(NotNullOrEmptyOk))]
@@ -72,7 +72,7 @@ public class DomainValidationTest
         
         actiopn.Should()
             .Throw<EntityValidationException>()
-            .WithMessage($"{fieldnName} should not be less than ${minLength} characters long");
+            .WithMessage($"{fieldnName} should not be less than {minLength} characters long");
     }
 
     public static IEnumerable<object[]> GetValeusSmallerThanMin(int numberOfTests = 5)
@@ -124,7 +124,7 @@ public class DomainValidationTest
 
         actiopn.Should()
             .Throw<EntityValidationException>()
-            .WithMessage($"{fieldnName} should not be grater than ${maxLength} characters long");
+            .WithMessage($"{fieldnName} should not be grater than {maxLength} characters long");
     }
 
     public static IEnumerable<object[]> GetValeusGreaterThanMax(int numberOfTests = 5)

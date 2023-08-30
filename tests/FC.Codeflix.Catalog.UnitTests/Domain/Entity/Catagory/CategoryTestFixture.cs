@@ -4,18 +4,15 @@ using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
 namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Catagory;
 
-public class CategoryTestFixture : BaseFixture
-{
+public class CategoryTestFixture : BaseFixture {
     // As fixture são um forma de padrozinar as intancias dos objetos usados para fazer os teste.
     // nesse caso é uma category
 
     public CategoryTestFixture()
-        : base()
-    {
+        : base() {
     }
 
-    public string GetValidCategoryName()
-    {
+    public string GetValidCategoryName() {
         var categoryName = "";
         while (categoryName.Length < 3)
             categoryName = Faker.Commerce.Categories(1)[0];
@@ -24,8 +21,7 @@ public class CategoryTestFixture : BaseFixture
         return categoryName;
     }
 
-    public string GetValidCategoryDescription()
-    {
+    public string GetValidCategoryDescription() {
         var categoryDescription = Faker.Commerce.ProductDescription();
         if (categoryDescription.Length > 10_000)
             categoryDescription = categoryDescription[..10_000];
@@ -42,6 +38,5 @@ public class CategoryTestFixture : BaseFixture
 // CollectionDefinition => com o collection podemos "injetar" o fixture na classe de teste
 [CollectionDefinition(nameof(CategoryTestFixture))]
 public class CategoryTestFixtureCollection :
-    ICollectionFixture<CategoryTestFixture>
-{
+    ICollectionFixture<CategoryTestFixture> {
 }

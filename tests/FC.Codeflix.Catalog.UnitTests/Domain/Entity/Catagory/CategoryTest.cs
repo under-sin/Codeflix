@@ -55,7 +55,7 @@ public class CategoryTest {
         (datetimeAfter >= category.CreatedAt).Should().BeTrue();
         category.IsActive.Should().Be(isActive);
     }
-
+    
     [Theory(DisplayName = nameof(InstantiateErrorWhenNameIsEmpty))]
     [Trait("Domian", "Category - Aggregates")]
     [InlineData("")]

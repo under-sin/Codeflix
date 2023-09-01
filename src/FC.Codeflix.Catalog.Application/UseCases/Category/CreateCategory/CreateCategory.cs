@@ -21,8 +21,10 @@ public class CreateCategory : ICreateCategory {
             input.IsActive
         );
 
-        await _categoryRepository.Insert(category, cancellationToken);
-        await _unitOfWork.Commit(cancellationToken);
+        await Task.WhenAll(
+            _categoryRepository.Insert(category, cancellationToken),
+            _unitOfWork.Commit(cancellationToken)
+        );
 
         return new CreateCategoryOutput(
             category.Id,

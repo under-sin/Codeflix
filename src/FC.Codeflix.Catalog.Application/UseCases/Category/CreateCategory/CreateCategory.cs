@@ -4,17 +4,19 @@ using FC.Codeflix.Catalog.Domain.Repository;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 
-public class CreateCategory : ICreateCategory {
-
+public class CreateCategory : ICreateCategory
+{
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateCategory(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork) {
+    public CreateCategory(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
+    {
         _categoryRepository = categoryRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<CreateCategoryOutput> Handle(CreateCategoryInput input, CancellationToken cancellationToken) {
+    public async Task<CreateCategoryOutput> Handle(CreateCategoryInput input, CancellationToken cancellationToken)
+    {
         var category = new DomainEntity.Category(
             input.Name,
             input.Description,
@@ -35,4 +37,3 @@ public class CreateCategory : ICreateCategory {
         );
     }
 }
-

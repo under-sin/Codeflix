@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Xml.Linq;
-using FC.Codeflix.Catalog.Domain.Exceptions;
+﻿using FC.Codeflix.Catalog.Domain.Exceptions;
 using FluentAssertions;
 using Xunit;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
@@ -9,7 +7,8 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Catagory;
 
 // Collection que fiz para o test qual Fixture ele deve receber
 [Collection(nameof(CategoryTestFixture))]
-public class CategoryTest {
+public class CategoryTest
+{
     private readonly CategoryTestFixture _categoryTestFixture;
 
     public CategoryTest(CategoryTestFixture categoryTestFixture)
@@ -17,7 +16,8 @@ public class CategoryTest {
 
     [Fact(DisplayName = nameof(Instantiate))]
     [Trait("Domian", "Category - Aggregates")]
-    public void Instantiate() {
+    public void Instantiate()
+    {
         var validCategory = _categoryTestFixture.GetValidCategory();
 
         var datetimeBefore = DateTime.Now;
@@ -39,7 +39,8 @@ public class CategoryTest {
     [Trait("Domian", "Category - Aggregates")]
     [InlineData(true)]
     [InlineData(false)]
-    public void InstantiateWithIsActive(bool isActive) {
+    public void InstantiateWithIsActive(bool isActive)
+    {
         var validCategory = _categoryTestFixture.GetValidCategory();
 
         var datetimeBefore = DateTime.Now;
@@ -55,13 +56,14 @@ public class CategoryTest {
         (datetimeAfter >= category.CreatedAt).Should().BeTrue();
         category.IsActive.Should().Be(isActive);
     }
-    
+
     [Theory(DisplayName = nameof(InstantiateErrorWhenNameIsEmpty))]
     [Trait("Domian", "Category - Aggregates")]
     [InlineData("")]
     [InlineData(null)]
     [InlineData("  ")]
-    public void InstantiateErrorWhenNameIsEmpty(string? name) {
+    public void InstantiateErrorWhenNameIsEmpty(string? name)
+    {
         var validCategory = _categoryTestFixture.GetValidCategory();
 
         Action action =
@@ -74,7 +76,8 @@ public class CategoryTest {
 
     [Fact(DisplayName = nameof(InstantiateErrorWhenDescriptionIsNull))]
     [Trait("Domian", "Category - Aggregates")]
-    public void InstantiateErrorWhenDescriptionIsNull() {
+    public void InstantiateErrorWhenDescriptionIsNull()
+    {
         var validCategory = _categoryTestFixture.GetValidCategory();
 
         Action action =
@@ -88,7 +91,8 @@ public class CategoryTest {
     [Theory(DisplayName = nameof(InstantiateErrorWhenNameIsLessThan3Characters))]
     [Trait("Domian", "Category - Aggregates")]
     [MemberData(nameof(GetNamesWithLessThan3Characteres), parameters: 10)]
-    public void InstantiateErrorWhenNameIsLessThan3Characters(string invalidName) {
+    public void InstantiateErrorWhenNameIsLessThan3Characters(string invalidName)
+    {
         var validCategory = _categoryTestFixture.GetValidCategory();
 
         Action action =
@@ -99,10 +103,12 @@ public class CategoryTest {
             .WithMessage("Name should not be less than 3 characters long");
     }
 
-    public static IEnumerable<object[]> GetNamesWithLessThan3Characteres(int numberOfTests = 6) {
+    public static IEnumerable<object[]> GetNamesWithLessThan3Characteres(int numberOfTests = 6)
+    {
         // gera dados randomicos para o teste acima.
         var fixture = new CategoryTestFixture();
-        for (int i = 0; i < numberOfTests; i++) {
+        for (int i = 0; i < numberOfTests; i++)
+        {
             var isOdd = i % 2 == 1;
             yield return new object[]
             {
@@ -113,7 +119,8 @@ public class CategoryTest {
 
     [Fact(DisplayName = nameof(InstantiateErrorWhenNameIsGreaterThan255Characters))]
     [Trait("Domian", "Category - Aggregates")]
-    public void InstantiateErrorWhenNameIsGreaterThan255Characters() {
+    public void InstantiateErrorWhenNameIsGreaterThan255Characters()
+    {
         var validCategory = _categoryTestFixture.GetValidCategory();
         var invalidName = String.Join(null, Enumerable.Range(1, 256).Select(_ => "A").ToArray());
 
@@ -127,7 +134,8 @@ public class CategoryTest {
 
     [Fact(DisplayName = nameof(InstantiateErrorWhenDescriptionIsGreaterThan10_000Characters))]
     [Trait("Domian", "Category - Aggregates")]
-    public void InstantiateErrorWhenDescriptionIsGreaterThan10_000Characters() {
+    public void InstantiateErrorWhenDescriptionIsGreaterThan10_000Characters()
+    {
         var validCategory = _categoryTestFixture.GetValidCategory();
         var invalidDescription = String
             .Join(null, Enumerable.Range(1, 10_001).Select(_ => "A").ToArray());
@@ -142,7 +150,8 @@ public class CategoryTest {
 
     [Fact(DisplayName = nameof(Activate))]
     [Trait("Domian", "Category - Aggregates")]
-    public void Activate() {
+    public void Activate()
+    {
         var validCategory = _categoryTestFixture.GetValidCategory();
         var category = new DomainEntity
             .Category(validCategory.Name, validCategory.Description, false);
@@ -154,7 +163,8 @@ public class CategoryTest {
 
     [Fact(DisplayName = nameof(Deactivate))]
     [Trait("Domian", "Category - Aggregates")]
-    public void Deactivate() {
+    public void Deactivate()
+    {
         var validCategory = _categoryTestFixture.GetValidCategory();
         var category = new DomainEntity.
             Category(validCategory.Name, validCategory.Description, true);
@@ -166,7 +176,8 @@ public class CategoryTest {
 
     [Fact(DisplayName = nameof(Update))]
     [Trait("Domian", "Category - Aggregates")]
-    public void Update() {
+    public void Update()
+    {
         var category = _categoryTestFixture.GetValidCategory();
         var categoryWithNewValeus = _categoryTestFixture.GetValidCategory();
 
@@ -178,7 +189,8 @@ public class CategoryTest {
 
     [Fact(DisplayName = nameof(UpdateOnlyName))]
     [Trait("Domian", "Category - Aggregates")]
-    public void UpdateOnlyName() {
+    public void UpdateOnlyName()
+    {
         var category = _categoryTestFixture.GetValidCategory();
         var currentDescription = category.Description;
 
@@ -194,7 +206,8 @@ public class CategoryTest {
     [InlineData("")]
     [InlineData(null)]
     [InlineData("  ")]
-    public void UpdateErrorWhenNameIsEmpty(string? name) {
+    public void UpdateErrorWhenNameIsEmpty(string? name)
+    {
         var category = _categoryTestFixture.GetValidCategory();
 
         Action action =
@@ -211,7 +224,8 @@ public class CategoryTest {
     [InlineData("ab")]
     [InlineData("1")]
     [InlineData("12")]
-    public void UpdateErrorWhenNameIsLessThan3Characters(string invalidName) {
+    public void UpdateErrorWhenNameIsLessThan3Characters(string invalidName)
+    {
         var category = _categoryTestFixture.GetValidCategory();
 
         Action action =
@@ -224,7 +238,8 @@ public class CategoryTest {
 
     [Fact(DisplayName = nameof(UpdateErrorWhenNameIsGreaterThan255Characters))]
     [Trait("Domian", "Category - Aggregates")]
-    public void UpdateErrorWhenNameIsGreaterThan255Characters() {
+    public void UpdateErrorWhenNameIsGreaterThan255Characters()
+    {
         var invalidName = _categoryTestFixture.Faker.Lorem.Letter(256);
         var category = _categoryTestFixture.GetValidCategory();
 
@@ -238,7 +253,8 @@ public class CategoryTest {
 
     [Fact(DisplayName = nameof(UpdateErrorWhenDescriptionIsGreaterThan10_000Characters))]
     [Trait("Domian", "Category - Aggregates")]
-    public void UpdateErrorWhenDescriptionIsGreaterThan10_000Characters() {
+    public void UpdateErrorWhenDescriptionIsGreaterThan10_000Characters()
+    {
         var newCategoryName = _categoryTestFixture.GetValidCategoryName();
         var category = _categoryTestFixture.GetValidCategory();
         var invalidDescription = _categoryTestFixture.Faker.Commerce.ProductDescription();

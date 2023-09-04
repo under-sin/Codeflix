@@ -1,7 +1,7 @@
 ﻿namespace FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 
-public class CreateCategoryOutput {
-
+public class CreateCategoryOutput
+{
     public Guid Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
@@ -14,7 +14,8 @@ public class CreateCategoryOutput {
         string description,
         bool isActive,
         DateTime createdAt
-    ) {
+    )
+    {
         Id = id;
         Name = name;
         Description = description;
@@ -22,4 +23,3 @@ public class CreateCategoryOutput {
         CreatedAt = createdAt;
     }
 }
-

@@ -52,6 +52,79 @@ public class CreateCategoryTest
         output.Id.Should().NotBeEmpty();
         output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
     }
+    
+    [Fact(DisplayName = nameof(CreateCategoryWithOnlyName))]
+    [Trait("Application", "CreateCategory - Use Cases")]
+    public async void CreateCategoryWithOnlyName()
+    {
+        var repositoryMock = _fixture.GetRepositoryMock();
+        var unitOfWorkMock = _fixture.GetUnitOfWork();
+        var useCase = new UseCases.CreateCategory(
+            repositoryMock.Object,
+            unitOfWorkMock.Object
+        );
+        var input = new UseCases.CreateCategoryInput(
+            _fixture.GetValidCategoryName()    
+        );
+
+        var output = await useCase.Handle(input, CancellationToken.None);
+
+        repositoryMock.Verify(
+            repository => repository.Insert(
+                It.IsAny<Category>(),
+                It.IsAny<CancellationToken>()
+            ),
+            Times.Once
+        );
+        unitOfWorkMock.Verify(
+            uow => uow.Commit(It.IsAny<CancellationToken>()),
+            Times.Once
+        );
+
+        output.Should().NotBeNull();
+        output.Name.Should().Be(input.Name);
+        output.Description.Should().Be("");
+        output.IsActive.Should().BeTrue();
+        output.Id.Should().NotBeEmpty();
+        output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
+    }
+    
+    [Fact(DisplayName = nameof(CreateCategoryWithOnlyNameAndDescription))]
+    [Trait("Application", "CreateCategory - Use Cases")]
+    public async void CreateCategoryWithOnlyNameAndDescription()
+    {
+        var repositoryMock = _fixture.GetRepositoryMock();
+        var unitOfWorkMock = _fixture.GetUnitOfWork();
+        var useCase = new UseCases.CreateCategory(
+            repositoryMock.Object,
+            unitOfWorkMock.Object
+        );
+        var input = new UseCases.CreateCategoryInput(
+            _fixture.GetValidCategoryName(),
+            _fixture.GetValidCategoryDescription()
+        );
+
+        var output = await useCase.Handle(input, CancellationToken.None);
+
+        repositoryMock.Verify(
+            repository => repository.Insert(
+                It.IsAny<Category>(),
+                It.IsAny<CancellationToken>()
+            ),
+            Times.Once
+        );
+        unitOfWorkMock.Verify(
+            uow => uow.Commit(It.IsAny<CancellationToken>()),
+            Times.Once
+        );
+
+        output.Should().NotBeNull();
+        output.Name.Should().Be(input.Name);
+        output.Description.Should().Be(input.Description);
+        output.IsActive.Should().BeTrue();
+        output.Id.Should().NotBeEmpty();
+        output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
+    }
 
     [Theory(DisplayName = nameof(ThrowWhenCantInstantiateAggregate))]
     [Trait("Application", "CreateCategory - Use Cases")]
@@ -85,22 +158,41 @@ public class CreateCategoryTest
             invalidInputShortName,
             "Name should not be less than 3 characters long"
         });
-        
+
         // nome nao pode ser maior que 255 caracteres
         var invalidInputToLongName = fixture.GetInput();
         var tooLongNameForCategory = fixture.Faker.Commerce.ProductName();
         while (tooLongNameForCategory.Length <= 255)
             tooLongNameForCategory = $"{tooLongNameForCategory} {fixture.Faker.Commerce.ProductName()}";
-        
+
         invalidInputToLongName.Name = tooLongNameForCategory;
         invalidInputList.Add(new object[]
         {
             invalidInputToLongName,
             "Name should not be grater than 255 characters long"
         });
-        
+
         // descrition nao pode ser nula
-        // nome nao pode ser nulo
+        var invalidInputDescriptionNull = fixture.GetInput();
+        invalidInputDescriptionNull.Description = null!;
+        invalidInputList.Add(new object[]
+        {
+            invalidInputDescriptionNull,
+            "Description should not be null"
+        });
+        
+        // descrition nao pode ser maior que 10_000 caracteres
+        var invalidInputToLongDescription = fixture.GetInput();
+        var tooLongDescriptionForCategory = fixture.Faker.Commerce.ProductDescription();
+        while (tooLongDescriptionForCategory.Length <= 10_000)
+            tooLongDescriptionForCategory = $"{tooLongDescriptionForCategory} {fixture.Faker.Commerce.ProductDescription()}";
+
+        invalidInputToLongDescription.Description = tooLongDescriptionForCategory;
+        invalidInputList.Add(new object[]
+        {
+            invalidInputToLongDescription,
+            "Description should not be grater than 10000 characters long"
+        });
         return invalidInputList;
     }
 }
